@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Professor de Geografia – Estudo para Concurso</title>
+<style>
+:root{
+  --ace-primary:#1e3a5f;--ace-secondary:#1d4ed8;--ciano:#2563eb;--azul:#3b82f6;
+  --bg:#eff6ff;--card:#fff;--text:#1a1a1a;--muted:#6b7280;--border:#dbeafe;
+  --shadow:0 2px 8px rgba(0,0,0,.08);--radius:12px;
+}
+[data-dark]{
+  --bg:#0a0a0a;--card:#111;--text:#f0f0f0;--muted:#9ca3af;--border:#1f2937;
+  --shadow:0 2px 8px rgba(0,0,0,.4);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .3s,color .3s}
+header{background:linear-gradient(135deg,#0f172a,#1e3a5f,#1d4ed8);padding:18px 20px 14px;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.3)}
+.hdr-row{display:flex;align-items:center;gap:12px;max-width:900px;margin:0 auto}
+.badge{background:#fff2;color:#fff;font-size:.7rem;font-weight:700;padding:3px 8px;border-radius:20px;border:1px solid #fff4;letter-spacing:.5px}
+.hdr-titles h1{font-size:1.1rem;font-weight:700;color:#fff;line-height:1.2}
+.hdr-titles p{font-size:.72rem;color:#bfdbfe;margin-top:2px}
+.hdr-actions{margin-left:auto;display:flex;gap:8px}
+.hdr-btn{background:#fff2;border:1px solid #fff3;color:#fff;padding:6px 10px;border-radius:8px;cursor:pointer;font-size:.75rem;transition:background .2s}
+.hdr-btn:hover{background:#fff3}
+.speed-group{display:flex;border:1px solid #fff3;border-radius:8px;overflow:hidden}
+.speed-btn{background:#fff2;border:none;border-right:1px solid #fff3;color:#fff;padding:6px 9px;cursor:pointer;font-size:.72rem;font-weight:600;transition:background .2s}
+.speed-btn:last-child{border-right:none}
+.speed-btn:hover{background:#fff3}
+.speed-btn.ativo{background:#fff4;font-weight:800}
+.tabs-wrap{background:var(--card);border-bottom:2px solid var(--border);position:sticky;top:72px;z-index:90}
+.tabs{display:flex;gap:0;max-width:900px;margin:0 auto;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{padding:12px 16px;cursor:pointer;font-size:.82rem;font-weight:600;color:var(--muted);white-space:nowrap;border-bottom:3px solid transparent;transition:all .2s}
+.tab.ativo{color:var(--ace-primary);border-bottom-color:var(--ace-primary)}
+.tab:hover:not(.ativo){color:var(--ace-secondary)}
+.content{max-width:900px;margin:0 auto;padding:16px}
+.secao{display:none}.secao.ativa{display:block}
+.disc-bloco{background:var(--card);border-radius:var(--radius);margin-bottom:12px;box-shadow:var(--shadow);overflow:hidden}
+.disc-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;background:var(--ace-primary);color:#fff;font-weight:600;font-size:.9rem;user-select:none}
+.disc-header:hover{opacity:.92}
+.disc-header .arrow{transition:transform .3s;font-size:.8rem}
+.disc-header.open .arrow{transform:rotate(180deg)}
+.disc-topicos{display:none;padding:0}
+.disc-topicos.open{display:block}
+.topico-item{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:10px}
+.topico-item:last-child{border-bottom:none}
+.freq-badge{font-size:.65rem;padding:2px 7px;border-radius:10px;font-weight:700;white-space:nowrap;margin-top:2px}
+.freq-alto{background:#dbeafe;color:#1e3a5f}
+.freq-medio{background:#eff6ff;color:#1d4ed8}
+.freq-baixo{background:#f0f9ff;color:#0369a1}
+.topico-nome{font-weight:600;font-size:.85rem;margin-bottom:3px}
+.topico-desc{font-size:.78rem;color:var(--muted);line-height:1.5}
+.flash-ctrl{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center}
+.flash-ctrl select,.flash-ctrl button{padding:8px 14px;border-radius:8px;border:1px solid var(--border);font-size:.82rem;cursor:pointer;background:var(--card);color:var(--text)}
+.flash-ctrl button{background:var(--ace-primary);color:#fff;border:none;font-weight:600}
+.flash-ctrl button:hover{background:var(--ace-secondary)}
+.flash-prog{font-size:.8rem;color:var(--muted);margin-left:auto}
+.flash-box{perspective:1000px;margin:0 auto 16px}
+.flash-inner{position:relative;transition:transform .5s;transform-style:preserve-3d;cursor:pointer}
+.flash-inner.virado{transform:rotateY(180deg)}
+.flash-frente,.flash-verso{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);backface-visibility:hidden;padding:32px 24px;text-align:center;min-height:200px;display:flex;flex-direction:column;justify-content:center;align-items:center}
+.flash-verso{position:absolute;top:0;left:0;width:100%;transform:rotateY(180deg);background:linear-gradient(135deg,#0f172a,#1e3a5f)}
+.flash-frente .label{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
+.flash-frente .termo{font-size:1.4rem;font-weight:700;color:var(--ace-primary)}
+.flash-verso .label{font-size:.7rem;color:#bfdbfe;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
+.flash-verso .def{font-size:.88rem;color:#fff;line-height:1.6}
+.flash-nav{display:flex;justify-content:center;gap:12px}
+.flash-nav button{padding:9px 20px;border-radius:8px;border:none;cursor:pointer;font-weight:600;font-size:.82rem}
+.btn-ant{background:var(--border);color:var(--text)}
+.btn-prox{background:var(--ace-primary);color:#fff}
+.btn-prox:hover{background:var(--ace-secondary)}
+.mapa-filtros{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.mapa-filtros button{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:.78rem;cursor:pointer}
+.mapa-filtros button.ativo{background:var(--ace-primary);color:#fff;border-color:var(--ace-primary)}
+.mapa-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.mapa-card{background:var(--card);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow);border-left:4px solid var(--ace-primary);cursor:pointer;transition:transform .15s}
+.mapa-card:hover{transform:translateY(-2px)}
+.mapa-card .mc-disc{font-size:.65rem;color:var(--muted);text-transform:uppercase;margin-bottom:4px}
+.mapa-card .mc-nome{font-size:.82rem;font-weight:600;margin-bottom:4px}
+.mapa-card .mc-freq{font-size:.65rem}
+.quiz-ctrl{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.quiz-ctrl select{padding:8px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:.82rem}
+.quiz-ctrl button{padding:8px 18px;border-radius:8px;border:none;background:var(--ace-primary);color:#fff;font-weight:600;cursor:pointer;font-size:.82rem}
+.quiz-ctrl button:hover{background:var(--ace-secondary)}
+.quiz-box{background:var(--card);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)}
+.quiz-info{display:flex;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.quiz-badge{padding:4px 12px;border-radius:20px;font-size:.72rem;font-weight:700}
+.qbadge-disc{background:#dbeafe;color:#1e3a5f}
+.qbadge-num{background:#eff6ff;color:#1e40af;border:1px solid var(--border)}
+[data-dark] .qbadge-disc{background:#1e3a5f;color:#bfdbfe}
+[data-dark] .qbadge-num{background:#1e3a5f;color:#bfdbfe}
+.quiz-pergunta{font-size:.95rem;font-weight:600;line-height:1.6;margin-bottom:16px}
+.quiz-ops{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.quiz-op{padding:11px 14px;border-radius:8px;border:1px solid var(--border);background:var(--bg);cursor:pointer;font-size:.84rem;text-align:left;transition:background .15s,border-color .15s;display:flex;align-items:flex-start;gap:8px}
+.quiz-op:hover:not(:disabled){background:#dbeafe;border-color:var(--ace-primary)}
+.quiz-op.correta{background:#dbeafe;border-color:#1e3a5f;font-weight:600}
+.quiz-op.errada{background:#fee2e2;border-color:#dc2626}
+.quiz-explicacao{background:#eff6ff;border-left:4px solid var(--ace-primary);padding:12px 14px;border-radius:0 8px 8px 0;font-size:.82rem;line-height:1.6;margin-bottom:14px;display:none}
+[data-dark] .quiz-explicacao{background:#1e3a5f}
+.quiz-explicacao.show{display:block}
+.quiz-nav{display:flex;gap:8px;flex-wrap:wrap}
+.quiz-nav button{padding:8px 18px;border-radius:8px;border:none;cursor:pointer;font-size:.82rem;font-weight:600}
+.btn-prox-q{background:var(--ace-primary);color:#fff}
+.btn-prox-q:hover{background:var(--ace-secondary)}
+.quiz-placar{text-align:center;padding:24px;display:none}
+.quiz-placar.show{display:block}
+.placar-num{font-size:3rem;font-weight:800;color:var(--ace-primary)}
+.placar-label{color:var(--muted);font-size:.88rem;margin-bottom:16px}
+.exames-lista{display:grid;gap:10px}
+.exame-card{background:var(--card);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.exame-info h3{font-size:.9rem;font-weight:700;margin-bottom:4px}
+.exame-info p{font-size:.75rem;color:var(--muted)}
+.btn-iniciar{padding:8px 18px;border-radius:8px;border:none;background:var(--ace-primary);color:#fff;font-weight:600;cursor:pointer;font-size:.82rem}
+.btn-iniciar:hover{background:var(--ace-secondary)}
+.exame-ativo{display:none}
+.exame-ativo.show{display:block}
+.ex-header{background:var(--ace-primary);color:#fff;border-radius:var(--radius);padding:14px 16px;margin-bottom:14px}
+.ex-header h2{font-size:.95rem;font-weight:700}
+.ex-header p{font-size:.75rem;color:#bfdbfe;margin-top:3px}
+.ex-secao-label{font-size:.78rem;font-weight:700;color:var(--ace-primary);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+.ex-pergunta{font-size:.9rem;font-weight:600;line-height:1.6;margin-bottom:14px}
+.ex-ops{display:flex;flex-direction:column;gap:7px;margin-bottom:12px}
+.ex-op{padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--bg);cursor:pointer;font-size:.82rem;text-align:left;transition:all .15s;display:flex;gap:8px;align-items:flex-start}
+.ex-op:hover:not(:disabled){background:#dbeafe;border-color:var(--ace-primary)}
+.ex-op.selecionada{background:#dbeafe;border-color:var(--ace-primary);font-weight:600}
+.ex-op.correta{background:#dbeafe;border-color:#1e3a5f}
+.ex-op.errada{background:#fee2e2;border-color:#dc2626}
+.ex-explicacao{background:#eff6ff;border-left:4px solid var(--ace-primary);padding:12px;border-radius:0 8px 8px 0;font-size:.8rem;line-height:1.6;margin-bottom:12px;display:none}
+[data-dark] .ex-explicacao{background:#1e3a5f}
+.ex-explicacao.show{display:block}
+.ex-nav{display:flex;gap:8px;margin-top:4px;flex-wrap:wrap}
+.ex-nav button{padding:8px 16px;border-radius:8px;border:none;cursor:pointer;font-size:.8rem;font-weight:600}
+.audio-btn{background:none;border:1px solid var(--border);border-radius:6px;padding:3px 7px;cursor:pointer;font-size:.82rem;color:var(--ace-primary);flex-shrink:0;transition:background .15s}
+.audio-btn:hover{background:var(--border)}
+.audio-btn-op{background:none;border:none;cursor:pointer;font-size:.78rem;padding:0 2px;opacity:.5;flex-shrink:0;transition:opacity .15s}
+.audio-btn-op:hover{opacity:1}
+.btn-ex-prox{background:var(--ace-primary);color:#fff}
+.btn-ex-prox:hover{background:var(--ace-secondary)}
+.btn-ex-voltar{background:var(--border);color:var(--text)}
+.ex-resultado{display:none;text-align:center;padding:28px}
+.ex-resultado.show{display:block}
+.ex-res-num{font-size:3.5rem;font-weight:800;color:var(--ace-primary)}
+.ex-res-label{color:var(--muted);font-size:.9rem;margin-bottom:20px}
+.relatorio-box{background:var(--card);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);margin-bottom:14px}
+.relatorio-box h3{font-size:.9rem;font-weight:700;margin-bottom:14px;color:var(--ace-primary)}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
+.stat-card{background:var(--bg);border-radius:10px;padding:14px;text-align:center;border:1px solid var(--border)}
+.stat-num{font-size:1.8rem;font-weight:800;color:var(--ace-primary)}
+.stat-label{font-size:.72rem;color:var(--muted);margin-top:2px}
+.btn-exportar{padding:10px 20px;border-radius:8px;border:none;background:var(--ciano);color:#fff;font-weight:600;cursor:pointer;font-size:.84rem}
+.btn-exportar:hover{opacity:.88}
+.btn-limpar{padding:10px 20px;border-radius:8px;border:none;background:#dc2626;color:#fff;font-weight:600;cursor:pointer;font-size:.84rem;margin-left:8px}
+#toast{position:fixed;bottom:24px;right:24px;background:#1a1a1a;color:#fff;padding:12px 20px;border-radius:10px;font-size:.82rem;opacity:0;transition:opacity .3s;pointer-events:none;z-index:9999;max-width:280px}
+#toast.show{opacity:1}
+[data-dark] .disc-topicos,.disc-topicos{background:var(--card)}
+[data-dark] .quiz-op,[data-dark] .ex-op{background:var(--bg);color:var(--text)}
+[data-dark] .freq-alto{background:#1e3a5f;color:#bfdbfe}
+[data-dark] .freq-medio{background:#1e3a8a;color:#93c5fd}
+[data-dark] .freq-baixo{background:#0c4a6e;color:#7dd3fc}
+@media(max-width:600px){
+  .flash-frente .termo{font-size:1.1rem}
+  .hdr-titles h1{font-size:.95rem}
+  .tab{padding:10px 12px;font-size:.76rem}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hdr-row">
+    <span class="badge">GEO</span>
+    <div class="hdr-titles">
+      <h1>Professor de Geografia</h1>
+      <p>Língua Portuguesa · Informática · Conhecimentos Específicos</p>
+    </div>
+    <div class="hdr-actions">
+      <div class="speed-group">
+        <button class="speed-btn ativo" onclick="setSpeed(1,this)">1×</button>
+        <button class="speed-btn" onclick="setSpeed(1.5,this)">1.5×</button>
+        <button class="speed-btn" onclick="setSpeed(2,this)">2×</button>
+      </div>
+      <button class="hdr-btn" onclick="toggleDark()">🌙</button>
+      <button class="hdr-btn" onclick="falarCard()">🔊</button>
+    </div>
+  </div>
+</header>
+
+<div class="tabs-wrap">
+  <div class="tabs">
+    <div class="tab ativo" onclick="mudarTab('resumo',this)">📚 Resumo</div>
+    <div class="tab" onclick="mudarTab('flash',this)">🃏 Flashcards</div>
+    <div class="tab" onclick="mudarTab('mapa',this)">🗺️ Mapa</div>
+    <div class="tab" onclick="mudarTab('quiz',this)">❓ Quiz</div>
+    <div class="tab" onclick="mudarTab('simulados',this)">📝 Simulados</div>
+    <div class="tab" onclick="mudarTab('relatorio',this)">📊 Relatório</div>
+  </div>
+</div>
+
+<div class="content">
+
+  <div id="sec-resumo" class="secao ativa"></div>
+
+  <div id="sec-flash" class="secao">
+    <div class="flash-ctrl">
+      <select id="flash-filtro" onchange="filtrarFlash()">
+        <option value="todos">Todas as disciplinas</option>
+      </select>
+      <button onclick="shuffleFlash()">🔀 Embaralhar</button>
+      <span class="flash-prog" id="flash-prog"></span>
+    </div>
+    <div class="flash-box" style="width:100%">
+      <div class="flash-inner" id="flash-inner" onclick="virarCard()">
+        <div class="flash-frente" id="flash-frente">
+          <div class="label">TERMO</div>
+          <div class="termo" id="flash-termo"></div>
+          <div style="font-size:.72rem;color:var(--muted);margin-top:16px">Clique para ver a definição</div>
+        </div>
+        <div class="flash-verso" id="flash-verso">
+          <div class="label">DEFINIÇÃO</div>
+          <div class="def" id="flash-def"></div>
+        </div>
+      </div>
+    </div>
+    <div class="flash-nav">
+      <button class="btn-ant" onclick="navFlash(-1)">← Anterior</button>
+      <button class="btn-prox" onclick="navFlash(1)">Próximo →</button>
+    </div>
+  </div>
+
+  <div id="sec-mapa" class="secao">
+    <div class="mapa-filtros" id="mapa-filtros"></div>
+    <div class="mapa-grid" id="mapa-grid"></div>
+  </div>
+
+  <div id="sec-quiz" class="secao">
+    <div class="quiz-ctrl">
+      <select id="quiz-filtro">
+        <option value="todos">Todas as disciplinas</option>
+        <option value="Português">Língua Portuguesa</option>
+        <option value="Informática">Conhecimentos em Informática</option>
+        <option value="Geografia">Conhecimentos Específicos</option>
+      </select>
+      <button onclick="iniciarQuiz()">▶ Iniciar Quiz</button>
+    </div>
+    <div class="quiz-box" id="quiz-box" style="display:none">
+      <div class="quiz-info">
+        <span class="quiz-badge qbadge-disc" id="q-disc"></span>
+        <span class="quiz-badge qbadge-num" id="q-num"></span>
+      </div>
+      <div class="quiz-pergunta" id="q-pergunta"></div>
+      <div class="quiz-ops" id="q-ops"></div>
+      <div class="quiz-explicacao" id="q-exp"></div>
+      <div class="quiz-nav">
+        <button class="btn-prox-q" id="btn-prox-q" onclick="proximaQuestao()" style="display:none">Próxima →</button>
+      </div>
+    </div>
+    <div class="quiz-placar" id="quiz-placar">
+      <div class="placar-num" id="placar-num"></div>
+      <div class="placar-label" id="placar-label"></div>
+      <button onclick="iniciarQuiz()" style="padding:10px 24px;border-radius:8px;border:none;background:var(--ace-primary);color:#fff;font-weight:600;cursor:pointer;font-size:.85rem">Novo Quiz</button>
+    </div>
+  </div>
+
+  <div id="sec-simulados" class="secao">
+    <div id="exames-lista" class="exames-lista"></div>
+    <div id="exame-ativo" class="exame-ativo">
+      <div class="ex-header">
+        <h2 id="ex-titulo"></h2>
+        <p id="ex-info"></p>
+      </div>
+      <div id="ex-corpo">
+        <div class="ex-secao-label" id="ex-sec-label"></div>
+        <div class="ex-pergunta" id="ex-pergunta"></div>
+        <div class="ex-ops" id="ex-ops"></div>
+        <div class="ex-explicacao" id="ex-exp"></div>
+        <div class="ex-nav">
+          <button class="btn-ex-voltar" onclick="voltarExames()">← Sair</button>
+          <button class="btn-ex-prox" id="btn-ex-prox" onclick="avancarExame()">Próxima →</button>
+        </div>
+      </div>
+      <div class="ex-resultado" id="ex-resultado">
+        <div class="ex-res-num" id="ex-res-num"></div>
+        <div class="ex-res-label" id="ex-res-label"></div>
+        <button onclick="voltarExames()" style="padding:10px 24px;border-radius:8px;border:none;background:var(--ace-primary);color:#fff;font-weight:600;cursor:pointer">Voltar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="sec-relatorio" class="secao">
+    <div class="relatorio-box">
+      <h3>📊 Estatísticas Gerais</h3>
+      <div class="stats-grid" id="stats-grid"></div>
+      <button class="btn-exportar" onclick="exportarTXT()">⬇ Exportar TXT</button>
+      <button class="btn-limpar" onclick="limparDados()">🗑 Limpar Dados</button>
+    </div>
+    <div class="relatorio-box" id="horario-box"></div>
+  </div>
+
+</div>
+
+<div id="toast"></div>
+
+<script>
+const disciplinas = [
+  {
+    nome:"📖 Língua Portuguesa",
+    cor:"linear-gradient(135deg,#1e3a5f,#1d4ed8)",
+    topicos:[
+      {t:"Interpretação de Texto",d:"Intelecção de textos denotativos e/ou conotativos. Intertextualidade: diálogo entre textos distintos. Identificar tema, ideia central, inferências e recursos argumentativos.",freq:"alto"},
+      {t:"Ortografia e Acentuação",d:"Acentuação gráfica e prosódica. Ortografia segundo o novo acordo ortográfico (2009). Regras de acentuação de oxítonas, paroxítonas e proparoxítonas.",freq:"alto"},
+      {t:"Uso da Crase",d:"Regras obrigatórias, proibidas e facultativas. Locução prepositiva + artigo feminino. Casos especiais com pronomes e palavras no plural.",freq:"alto"},
+      {t:"Pontuação",d:"Uso da vírgula, ponto e vírgula, dois pontos, travessão, reticências e parênteses. Separação de adjunto adverbial deslocado, aposto e orações intercaladas.",freq:"medio"},
+      {t:"Morfologia – Classes Gramaticais",d:"Classes variáveis: artigo, adjetivo, numeral, pronome, substantivo e verbo. Classes invariáveis: advérbio, conjunção, preposição e interjeição. Funções e flexões.",freq:"medio"},
+      {t:"Sintaxe e Concordância",d:"Concordância verbal e nominal. Sujeito simples, composto, oculto e indeterminado. Termos da oração: essenciais, integrantes e acessórios. Frase, oração e período.",freq:"alto"},
+      {t:"Colocação Pronominal e Regência",d:"Próclise, mesóclise e ênclise. Regência verbal: verbos que exigem preposição. Regência nominal. Análise morfossintática em situações contextuais.",freq:"medio"},
+      {t:"Período Composto",d:"Coordenação: orações sindéticas (aditivas, adversativas, alternativas, conclusivas, explicativas) e assindéticas. Subordinação: substantivas, adjetivas e adverbiais.",freq:"medio"},
+      {t:"Semântica e Figuras de Linguagem",d:"Polissemia, sinonímia, antonímia, homonímia e paronímia. Figuras: metáfora, metonímia, comparação, hipérbole, eufemismo, ironia, antítese. Signo linguístico: significante e significado.",freq:"baixo"},
+      {t:"Funções e Elementos da Linguagem",d:"Emissor, receptor, código, mensagem, canal e referente. Funções: referencial, emotiva, fática, poética, apelativa e metalinguística.",freq:"baixo"},
+      {t:"Vozes Verbais e Formação de Palavras",d:"Voz ativa, passiva (analítica e sintética) e reflexiva. Estrutura das palavras. Derivação (prefixal, sufixal, parassintética) e composição. Classificação quanto ao número de sílabas.",freq:"baixo"},
+    ]
+  },
+  {
+    nome:"💻 Conhecimentos em Informática",
+    cor:"linear-gradient(135deg,#1d4ed8,#2563eb)",
+    topicos:[
+      {t:"MS-Windows",d:"Conceito de pastas, diretórios, arquivos e atalhos. Área de trabalho e área de transferência. Manipulação de arquivos e pastas. Uso de menus, programas e aplicativos. Versão mais recente.",freq:"alto"},
+      {t:"MS-Word",d:"Estrutura básica dos documentos. Edição e formatação: cabeçalhos, parágrafos, fontes, colunas, marcadores, tabelas, impressão. Controle de quebras e numeração. Legendas, índices, objetos e caixas de texto.",freq:"alto"},
+      {t:"MS-Excel",d:"Células, linhas, colunas, pastas e gráficos. Tabelas, fórmulas, funções e macros. Obtenção de dados externos, classificação de dados e impressão.",freq:"alto"},
+      {t:"MS-PowerPoint",d:"Slides, anotações, régua, guias, cabeçalhos e rodapés. Edição e formatação de apresentações. Inserção de objetos, numeração. Botões de ação, animação e transição entre slides.",freq:"medio"},
+      {t:"Correio Eletrônico e Internet",d:"Uso de correio eletrônico: preparo, envio de mensagens e anexação de arquivos. Navegação na internet: conceitos de URL, links, sites, busca e impressão de páginas.",freq:"medio"},
+    ]
+  },
+  {
+    nome:"🌍 Conhecimentos Específicos",
+    cor:"linear-gradient(135deg,#0f172a,#1e3a5f)",
+    topicos:[
+      {t:"Ensino Híbrido e Tecnologia Educacional",d:"Conceito e modelos de ensino híbrido (rotação por estações, sala de aula invertida). Uso de tecnologias digitais no ensino de Geografia. TDIC e recursos educacionais digitais.",freq:"alto"},
+      {t:"Fundamentos e Metodologia do Ensino",d:"Fundamentos que estruturam o ensino-aprendizagem de Geografia. Aplicação didática e metodológica nas práticas de sala de aula. Propostas curriculares e o livro didático. Ensino e pesquisa em Geografia.",freq:"alto"},
+      {t:"Evolução do Pensamento Geográfico",d:"Correntes do pensamento geográfico: determinismo, possibilismo, geografia quantitativa, geografia crítica e humanista. Novos paradigmas da ciência geográfica.",freq:"medio"},
+      {t:"Conceitos Geográficos Fundamentais",d:"Paisagem, espaço, lugar, sociedade, região e território. Natureza do homem e da economia na geografia. Impactos da economia mundial sobre o meio ambiente.",freq:"alto"},
+      {t:"Geopolítica da Globalização",d:"Organismos internacionais (ONU, FMI, Banco Mundial). Comércio internacional e desigualdades. Blocos econômicos (Mercosul, União Europeia, NAFTA/USMCA). Conflitos e problemas do mundo atual.",freq:"alto"},
+      {t:"Cartografia e Representação",d:"Alfabetização e linguagem cartográfica. Cartografia nos diversos níveis de ensino. Orientação, localização e representação da Terra. Escala, projeções cartográficas, coordenadas geográficas e fusos horários.",freq:"alto"},
+      {t:"Território e Divisão Brasileira",d:"Divisão política, administrativa e planejamento do território brasileiro. Divisão do espaço segundo o IBGE: 5 regiões, mesorregiões e microrregiões. Regiões geoeconômicas (Norte, Nordeste, Centro-Sul).",freq:"alto"},
+      {t:"Rio de Janeiro: mesorregiões e microrregiões",d:"Características econômicas e sociais das mesorregiões e microrregiões do RJ. Diversidade sociocultural fluminense. Principais atividades econômicas, desigualdades regionais e dinâmica urbana.",freq:"medio"},
+      {t:"Conceitos Demográficos e Migrações",d:"Conceitos demográficos fundamentais: natalidade, mortalidade, fecundidade, esperança de vida. Crescimento populacional. Teorias demográficas (Malthus, transição demográfica). Distribuição e estrutura da população. Migrações populacionais.",freq:"medio"},
+      {t:"Urbanização e Industrialização",d:"Processo de industrialização e urbanização brasileira. Consequências ambientais. Relação cidade e campo. Metropolização, megacidades e problemas urbanos (favelização, mobilidade, poluição).",freq:"medio"},
+      {t:"Geografia Agrária",d:"Transformações territoriais no campo brasileiro. Agricultura e meio ambiente. Modernização agrícola e agronegócio. Reforma agrária. Produção familiar e movimentos sociais no campo.",freq:"medio"},
+      {t:"Quadro Natural Brasileiro",d:"Relevo, vegetação, clima, solos e hidrografia numa perspectiva global, nacional e regional. Biomas brasileiros (Amazônia, Cerrado, Caatinga, Mata Atlântica, Pampa, Pantanal). Clima e aquecimento global.",freq:"alto"},
+      {t:"Gestão e Conservação Ambiental",d:"Conservação, preservação e degradação ambiental no Brasil. Políticas públicas e gestão ambiental. Representações e práticas sociais em educação ambiental. Espaço e turismo no ensino de Geografia.",freq:"medio"},
+      {t:"Legislação Educacional",d:"Lei 9.394/1996 (LDB): princípios, estrutura e organização da educação nacional. Lei 8.069/1990 (ECA): direitos da criança e do adolescente, doutrina da proteção integral, papel da escola.",freq:"alto"},
+    ]
+  },
+];
+
+const questoes = [
+  // Português
+  {disc:"Português",p:"Na frase 'O mapa foi elaborado pelo professor de geografia', a voz verbal é:",ops:["Ativa","Reflexiva","Passiva sintética","Passiva analítica"],c:3,exp:"Voz passiva analítica: auxiliar 'foi' + particípio 'elaborado' + agente da passiva 'pelo professor'. Equivale a 'O professor elaborou o mapa'."},
+  {disc:"Português",p:"O recurso linguístico em 'O Brasil é um gigante adormecido' é:",ops:["Comparação","Metáfora","Hipérbole","Metonímia"],c:1,exp:"Metáfora: identificação implícita entre 'Brasil' e 'gigante adormecido' sem o uso de conectivo comparativo 'como'."},
+  {disc:"Português",p:"'Ele assistiu a aula inteira.' Esta frase apresenta erro de:",ops:["Concordância verbal","Regência verbal","Ortografia","Colocação pronominal"],c:1,exp:"'Assistir' no sentido de ver/presenciar é transitivo indireto e exige preposição 'a': 'assistiu à aula'. Regência verbal incorreta."},
+  {disc:"Português",p:"Assinale a alternativa em que há ERRO de concordância verbal:",ops:["Os alunos estudaram o mapa.","Fazia dois anos que ele ensinava.","Haviam muitos livros na sala.","A maioria dos alunos foi aprovada."],c:2,exp:"'Haver' no sentido de existir é impessoal: 'Havia muitos livros na sala'. Não flexiona para o plural."},
+  {disc:"Português",p:"Qual a função da linguagem predominante em 'Esta mensagem está chegando até você?'",ops:["Referencial","Emotiva","Fática","Poética"],c:2,exp:"A função fática tem por objetivo verificar ou estabelecer o canal de comunicação entre emissor e receptor."},
+  {disc:"Português",p:"Palavras de grafia e pronúncia semelhantes mas sentidos diferentes são chamadas de:",ops:["Sinônimos","Parônimos","Homônimos","Antônimos"],c:1,exp:"Parônimos: palavras parecidas na forma mas com significados diferentes. Ex: 'descrição' (ato de descrever) e 'discrição' (qualidade de discreto)."},
+  {disc:"Português",p:"Assinale a frase com crase CORRETAMENTE empregada:",ops:["Fomos à escola de trem.","Entreguei o mapa à ele.","Refiro-me à aquele problema.","Fui à pé até a escola."],c:0,exp:"'À escola' = preposição 'a' + artigo feminino 'a'. Não se usa crase antes de pronome masculino ('ele') nem se duplica antes de artigo."},
+  // Informática
+  {disc:"Informática",p:"No MS-Word, qual recurso gera automaticamente o sumário com base nos estilos de título?",ops:["Inserir > Tabela","Referências > Sumário","Revisão > Ortografia","Layout > Colunas"],c:1,exp:"Em Referências > Sumário, o Word gera automaticamente o índice baseado nos estilos de parágrafo Título 1, Título 2 etc."},
+  {disc:"Informática",p:"No MS-Excel, qual função retorna o maior valor de um intervalo?",ops:["=SOMA()","=MED()","=MÁXIMO()","=CONT.SE()"],c:2,exp:"=MÁXIMO() retorna o maior valor numérico em um intervalo. =SOMA() soma, =MED() retorna a mediana, =CONT.SE() conta condicionalmente."},
+  {disc:"Informática",p:"No MS-Windows, o atalho para desfazer a última ação é:",ops:["Ctrl+C","Ctrl+Z","Ctrl+V","Ctrl+X"],c:1,exp:"Ctrl+Z desfaz a última ação realizada na maioria dos programas Windows. Ctrl+Y refaz o que foi desfeito."},
+  {disc:"Informática",p:"No MS-PowerPoint, qual recurso define o efeito visual na mudança entre slides?",ops:["Animação","Transição","Design","Layout"],c:1,exp:"Transição define o efeito visual quando se muda de um slide para outro. Animação aplica-se a elementos dentro do slide."},
+  {disc:"Informática",p:"O protocolo HTTPS difere do HTTP por:",ops:["Ser mais lento","Adicionar criptografia SSL/TLS à transmissão","Funcionar apenas em redes privadas","Permitir apenas e-mails"],c:1,exp:"HTTPS usa criptografia SSL/TLS para proteger os dados transmitidos entre navegador e servidor, essencial em logins e transações."},
+  {disc:"Informática",p:"No MS-Excel, a função =SE() serve para:",ops:["Somar um intervalo","Executar teste lógico e retornar valores distintos","Contar células com texto","Calcular média"],c:1,exp:"=SE(teste_lógico; valor_se_verdadeiro; valor_se_falso) avalia uma condição e retorna um resultado conforme o teste."},
+  // Geografia
+  {disc:"Geografia",p:"O principal objetivo da alfabetização cartográfica no ensino de Geografia é:",ops:["Memorizar capitais e países","Desenvolver a capacidade de ler, interpretar e produzir representações do espaço geográfico","Decorar escalas numéricas","Aprender a usar o GPS"],c:1,exp:"A alfabetização cartográfica visa desenvolver a capacidade do aluno de ler e interpretar mapas, plantas e outras representações espaciais, compreendendo símbolos, escala, legenda e orientação."},
+  {disc:"Geografia",p:"Segundo o IBGE, o Brasil está dividido em quantas grandes regiões?",ops:["3","4","5","6"],c:2,exp:"O Brasil está dividido em 5 grandes regiões pelo IBGE: Norte, Nordeste, Centro-Oeste, Sudeste e Sul. Esta divisão é a oficial para fins estatísticos e administrativos."},
+  {disc:"Geografia",p:"O ensino híbrido caracteriza-se por:",ops:["Aulas exclusivamente online","Combinação de aprendizagem presencial e online de forma integrada","Uso de livros digitais apenas","Ausência de professor presencial"],c:1,exp:"O ensino híbrido (blended learning) combina momentos presenciais e online de forma planejada e integrada, aproveitando o melhor dos dois ambientes para personalizar o aprendizado."},
+  {disc:"Geografia",p:"A teoria de Malthus afirma que:",ops:["A população cresce de forma sustentável","A população cresce em progressão geométrica enquanto os alimentos crescem em progressão aritmética","O desenvolvimento tecnológico resolve todos os problemas populacionais","A natalidade é sempre inferior à mortalidade"],c:1,exp:"Thomas Malthus (1798) argumentou que a população tende a crescer em progressão geométrica (2,4,8,16...) enquanto a produção de alimentos cresceria em progressão aritmética (1,2,3,4...), gerando escassez."},
+  {disc:"Geografia",p:"A Lei 9.394/1996 é conhecida como:",ops:["Estatuto da Criança e do Adolescente","Lei de Diretrizes e Bases da Educação Nacional (LDB)","Plano Nacional de Educação","Constituição Federal da Educação"],c:1,exp:"A Lei 9.394/1996 é a Lei de Diretrizes e Bases da Educação Nacional (LDB), que estabelece os fundamentos, estrutura e organização de todo o sistema educacional brasileiro."},
+  {disc:"Geografia",p:"O conceito de 'território' em Geografia refere-se a:",ops:["Apenas a extensão física de um país","Espaço definido e delimitado por e a partir de relações de poder","A paisagem natural de uma região","O conjunto de rios e montanhas de um lugar"],c:1,exp:"Território é o espaço apropriado por um ator (Estado, grupo social) a partir de relações de poder. Envolve dimensões políticas, culturais, econômicas e simbólicas além da física."},
+  {disc:"Geografia",p:"Qual dos seguintes biomas ocupa a maior área do território brasileiro?",ops:["Cerrado","Mata Atlântica","Amazônia","Caatinga"],c:2,exp:"A Amazônia é o maior bioma brasileiro, ocupando cerca de 49% do território nacional e sendo a maior floresta tropical do mundo."},
+  {disc:"Geografia",p:"O processo de globalização é caracterizado por:",ops:["Isolamento das economias nacionais","Integração econômica, cultural e política em escala mundial mediada por tecnologia","Fim das desigualdades entre países","Redução do comércio internacional"],c:1,exp:"A globalização é o processo de integração econômica, política, social e cultural em escala mundial, acelerado pelo desenvolvimento das tecnologias de comunicação e transporte a partir do século XX."},
+  {disc:"Geografia",p:"A Lei 8.069/1990 (ECA) estabelece a doutrina da:",ops:["Situação irregular do menor","Proteção integral da criança e do adolescente","Responsabilidade penal a partir dos 14 anos","Tutela exclusiva do Estado sobre crianças"],c:1,exp:"O ECA (Estatuto da Criança e do Adolescente) adota a Doutrina da Proteção Integral, reconhecendo crianças e adolescentes como sujeitos de direitos em condição peculiar de desenvolvimento."},
+];
+
+const EXAMES_DATA = [
+  {
+    id:'sim1',titulo:'Simulado 1 – Língua Portuguesa',banca:'VUNESP',ano:2025,
+    edital:'Professor I de Geografia',cargo:'Nível Superior',
+    secoes:[
+      {nome:'Língua Portuguesa (Q1–Q10)',qs:[
+        {n:1,q:"No trecho 'Os professores de geografia participaram do planejamento curricular', o sujeito é:",ops:["do planejamento curricular","participaram","Os professores de geografia","curricular"],g:2,exp:"'Os professores de geografia' é o sujeito simples (quem praticou a ação de participar)."},
+        {n:2,q:"Assinale a frase em que a crase está empregada CORRETAMENTE:",ops:["Fomos à escola de barco.","Entreguei o relatório à ele.","Refiro-me à aquele mapa.","Fui à pé até a escola."],g:0,exp:"'À escola' = preposição 'a' + artigo feminino 'a'. Não se usa crase antes de pronome masculino ('ele') nem se duplica antes de artigo."},
+        {n:3,q:"Qual é a classe gramatical de 'embora' em 'Embora chovesse, a aula foi realizada'?",ops:["Advérbio","Preposição","Conjunção subordinativa concessiva","Interjeição"],g:2,exp:"'Embora' introduz oração subordinada adverbial concessiva (indica concessão ao fato principal). Não confundir com 'embora' = adeus/partida (advérbio)."},
+        {n:4,q:"'Os alunos chegaram cedo e estudaram o mapa.' As orações são:",ops:["Subordinadas adverbiais","Coordenadas sindéticas aditivas","Coordenadas assindéticas","Subordinadas substantivas"],g:1,exp:"A conjunção 'e' une orações coordenadas sindéticas aditivas, sem relação de dependência sintática entre elas."},
+        {n:5,q:"Em qual alternativa há ERRO de ortografia?",ops:["exceção","recepção","concenso","descrição"],g:2,exp:"O correto é 'consenso' (sem 'c' antes do 'n'). Deriva do latim 'consensus'."},
+        {n:6,q:"Na frase 'É necessário que todos compareçam', o modo verbal de 'compareçam' é:",ops:["Indicativo","Subjuntivo","Imperativo afirmativo","Imperativo negativo"],g:1,exp:"O subjuntivo presente é usado em orações subordinadas que expressam necessidade, desejo ou hipótese após expressões como 'é necessário que'."},
+        {n:7,q:"O advérbio 'claramente' na frase 'O professor explicou claramente o conceito' modifica:",ops:["O substantivo professor","O adjetivo claro","O verbo explicou","O artigo O"],g:2,exp:"Advérbios de modo modificam o verbo, indicando a maneira como a ação se realiza."},
+        {n:8,q:"Qual a voz verbal em 'O mapa foi desenhado pelo cartógrafo'?",ops:["Ativa","Reflexiva","Passiva sintética","Passiva analítica"],g:3,exp:"Voz passiva analítica: auxiliar 'foi' + particípio 'desenhado' + agente da passiva 'pelo cartógrafo'."},
+        {n:9,q:"Em 'Ninguém trouxe nada para a aula', a construção com dupla negação é:",ops:["Pleonasmo vicioso","Dupla negação enfática, correta em português","Erro de concordância","Ambiguidade"],g:1,exp:"Em português, 'ninguém... nada' é uma dupla negação enfática gramaticalmente correta, diferente do inglês onde seria erro."},
+        {n:10,q:"A figura de linguagem em 'O tempo é um rio que não para' é:",ops:["Comparação","Hipérbole","Metáfora","Metonímia"],g:2,exp:"Metáfora: identifica implicitamente 'tempo' e 'rio que não para' sem o uso de conectivo comparativo 'como'."},
+      ]}
+    ]
+  },
+  {
+    id:'sim2',titulo:'Simulado 2 – Conhecimentos em Informática',banca:'FCC',ano:2025,
+    edital:'Professor I de Geografia',cargo:'Nível Superior',
+    secoes:[
+      {nome:'Informática (Q1–Q5)',qs:[
+        {n:1,q:"No MS-Word, qual recurso insere números de página automaticamente?",ops:["Inserir > Cabeçalho","Inserir > Número de Página","Layout > Margens","Referências > Notas de Rodapé"],g:1,exp:"Em Inserir > Número de Página, o Word insere automaticamente a numeração nas posições escolhidas (topo, rodapé, margens)."},
+        {n:2,q:"No MS-Excel, a fórmula =SOMA(B1:B10) soma:",ops:["Apenas B1 e B10","Células de B1 até B10","Apenas 10 células aleatórias","Células da coluna B e linha 10"],g:1,exp:"O intervalo B1:B10 inclui todas as células de B1 até B10 — ou seja, 10 células consecutivas na coluna B."},
+        {n:3,q:"No MS-Windows, o atalho de teclado para 'desfazer' a última ação é:",ops:["Ctrl+C","Ctrl+Z","Ctrl+V","Ctrl+X"],g:1,exp:"Ctrl+Z desfaz a última ação realizada na maioria dos programas Windows. Ctrl+Y refaz o que foi desfeito."},
+        {n:4,q:"O formato de arquivo nativo do MS-Word (versão atual) é:",ops:[".doc",".txt",".docx",".pdf"],g:2,exp:"O formato .docx é o padrão do Microsoft Word a partir da versão 2007 (formato XML aberto). O .doc é o formato legado."},
+        {n:5,q:"No MS-PowerPoint, o 'Painel de Anotações' serve para:",ops:["Exibir o slide em tela cheia","Adicionar lembretes visíveis ao apresentador","Inserir imagens no slide","Configurar a transição"],g:1,exp:"O Painel de Anotações (abaixo do slide) permite ao apresentador adicionar notas de apoio, visíveis apenas para ele durante a apresentação."},
+      ]},
+      {nome:'Informática – Avançado (Q6–Q10)',qs:[
+        {n:6,q:"Na internet, o protocolo HTTPS difere do HTTP por:",ops:["Ser mais lento","Adicionar criptografia SSL/TLS à comunicação","Funcionar apenas em redes privadas","Permitir apenas e-mails"],g:1,exp:"HTTPS usa criptografia SSL/TLS para proteger os dados transmitidos entre o navegador e o servidor, essencial em transações e dados pessoais."},
+        {n:7,q:"No MS-Excel, qual função conta o número de células que atendem a uma condição?",ops:["=SOMA()","=MÉDIA()","=CONT.SE()","=MÁXIMO()"],g:2,exp:"=CONT.SE(intervalo; critério) conta quantas células de um intervalo atendem ao critério especificado."},
+        {n:8,q:"O que é um 'hiperlink' na internet?",ops:["Um arquivo de imagem","Um tipo de vírus","Um elemento clicável que redireciona para outra página ou recurso","Uma senha de acesso"],g:2,exp:"Hiperlink (ou link) é um elemento interativo que ao ser clicado redireciona o usuário para outro endereço/recurso na web."},
+        {n:9,q:"No MS-Word, 'mala direta' é usada para:",ops:["Enviar e-mails em massa","Criar documentos personalizados com dados variáveis (nome, endereço etc.)","Formatar automaticamente parágrafos","Inserir tabelas dinamicamente"],g:1,exp:"Mala direta combina um documento-modelo com uma fonte de dados para gerar cópias personalizadas em série."},
+        {n:10,q:"No MS-Windows, 'atalho' (shortcut) é:",ops:["Uma cópia completa do arquivo","Um arquivo compactado","Um ponteiro/link para o arquivo ou pasta original","Uma pasta protegida por senha"],g:2,exp:"Um atalho é um arquivo .lnk que aponta para o objeto original. Ao deletar um atalho, o arquivo original permanece intacto."},
+      ]},
+    ]
+  },
+  {
+    id:'sim3',titulo:'Simulado 3 – Conhecimentos Específicos de Geografia',banca:'IBFC',ano:2025,
+    edital:'Professor I de Geografia',cargo:'Nível Superior',
+    secoes:[
+      {nome:'Geografia – Conceitos e Metodologia (Q1–Q5)',qs:[
+        {n:1,q:"Qual corrente do pensamento geográfico defende que o meio natural determina a vida das sociedades humanas?",ops:["Possibilismo","Determinismo geográfico","Geografia humanista","Geografia crítica"],g:1,exp:"O determinismo geográfico (Ratzel, Huntington) afirma que o meio físico-natural condiciona e determina a organização e o comportamento das sociedades humanas."},
+        {n:2,q:"O possibilismo geográfico se diferencia do determinismo porque:",ops:["Nega a influência do meio natural","Afirma que o ser humano tem liberdade para transformar e adaptar o meio natural","Defende que clima determina a cultura","Nega a existência de relações natureza-sociedade"],g:1,exp:"O possibilismo (Vidal de La Blache) argumenta que o meio oferece possibilidades e que o ser humano, por meio da cultura e técnica, escolhe como utilizá-las."},
+        {n:3,q:"Escala cartográfica 1:50.000 significa que:",ops:["1 metro no mapa equivale a 50.000 metros na realidade","1 centímetro no mapa equivale a 50.000 centímetros (500 metros) na realidade","O mapa é 50.000 vezes maior que a realidade","1 quilômetro no mapa equivale a 50.000 quilômetros"],g:1,exp:"Na escala 1:50.000, cada unidade no mapa corresponde a 50.000 unidades na realidade. Logo, 1 cm = 50.000 cm = 500 m = 0,5 km no terreno."},
+        {n:4,q:"A divisão do Brasil em regiões geoeconômicas (Norte, Nordeste, Centro-Sul) foi proposta por:",ops:["IBGE","Pedro Pinchas Geiger","Milton Santos","Josué de Castro"],g:1,exp:"A divisão em regiões geoeconômicas foi proposta por Pedro Pinchas Geiger (1967) e considera aspectos econômicos, históricos e culturais, diferente da divisão regional oficial do IBGE."},
+        {n:5,q:"O conceito de 'lugar' em geografia humanista enfatiza:",ops:["A delimitação política de um território","As experiências vividas, sentimentos e significados que as pessoas atribuem ao espaço","A extensão física mensurável de uma área","As relações de poder sobre um espaço"],g:1,exp:"Na geografia humanista (Tuan, Yi-Fu Tuan), 'lugar' é o espaço dotado de significado e experiência vivida — é onde as pessoas constroem vínculos afetivos e identitários."},
+      ]},
+      {nome:'Geografia – Brasil e Mundo (Q6–Q10)',qs:[
+        {n:6,q:"O bioma brasileiro caracterizado por vegetação de arbustos tortuosos e adaptados à seca é:",ops:["Cerrado","Caatinga","Pantanal","Amazônia"],g:1,exp:"A Caatinga é o único bioma exclusivamente brasileiro, caracterizado por vegetação xerófila adaptada ao clima semiárido do Nordeste — cactáceas, bromélias e árvores caducifólias."},
+        {n:7,q:"O processo de metropolização no Brasil está associado principalmente a:",ops:["Êxodo rural e industrialização a partir da década de 1950","Migração europeia no século XIX","Exploração agrícola do interior","Ocupação das regiões Norte e Nordeste"],g:0,exp:"A metropolização acelerou-se com o êxodo rural e a industrialização, especialmente a partir de 1950, concentrando população nas grandes cidades, sobretudo no Sudeste."},
+        {n:8,q:"O Mercosul é um bloco econômico composto originalmente por:",ops:["Brasil, Argentina, Uruguai e Paraguai","Brasil, Chile, Bolívia e Peru","Brasil, Argentina, Venezuela e Colômbia","Brasil, México, Cuba e Argentina"],g:0,exp:"O Mercosul foi criado em 1991 pelo Tratado de Assunção entre Brasil, Argentina, Uruguai e Paraguai. Venezuela foi suspensa em 2017. Hoje conta com membros associados."},
+        {n:9,q:"O aquecimento global é causado principalmente pelo:",ops:["Aumento das áreas verdes","Acúmulo de gases do efeito estufa (CO₂, CH₄) na atmosfera em decorrência de atividades humanas","Diminuição da atividade vulcânica","Variações naturais na órbita terrestre apenas"],g:1,exp:"O consenso científico aponta que o aquecimento global atual é causado principalmente pela intensificação do efeito estufa pelo acúmulo de CO₂, CH₄ e outros gases provenientes de atividades humanas."},
+        {n:10,q:"A transição demográfica refere-se à passagem de um estágio de:",ops:["Alta natalidade e alta mortalidade para baixa natalidade e baixa mortalidade","Baixa natalidade para alta natalidade","Alta urbanização para baixa urbanização","Alta migração para baixa migração"],g:0,exp:"A teoria da transição demográfica descreve a passagem histórica de altas taxas de natalidade e mortalidade (pré-industrial) para baixas taxas de ambas (pós-industrial), passando por fase de crescimento acelerado."},
+      ]},
+    ]
+  },
+  {
+    id:'sim4',titulo:'Simulado 4 – Completo (LP + Informática + Geografia)',banca:'Ação Bahia',ano:2025,
+    edital:'Professor I de Geografia',cargo:'Nível Superior',
+    secoes:[
+      {nome:'Língua Portuguesa (Q1–Q4)',qs:[
+        {n:1,q:"'Conforme o planejado, o professor realizou a aula de campo.' A palavra 'conforme' exerce a função de:",ops:["Preposição","Conjunção conformativa","Advérbio de modo","Pronome relativo"],g:1,exp:"'Conforme' introduz oração subordinada adverbial conformativa, indicando que a ação foi realizada de acordo com algo previsto."},
+        {n:2,q:"Qual alternativa apresenta uso CORRETO do hífen?",ops:["Anti-inflamatório","Antiinflamatório","Anti inflamatório","Antiinflamatorio"],g:0,exp:"Usa-se hífen quando o segundo elemento começa com vogal idêntica à última letra do prefixo: anti + inflamatório = anti-inflamatório."},
+        {n:3,q:"O sujeito da oração 'É fundamental estudar cartografia' é:",ops:["cartografia","estudar","É fundamental","Sujeito inexistente (oração impessoal)"],g:3,exp:"A construção 'É fundamental + infinitivo' forma uma oração impessoal — não há um ser que pratique a ação de 'ser fundamental'."},
+        {n:4,q:"Em 'Aspirei ao cargo de professor', o verbo 'aspirar' está empregado no sentido de:",ops:["Inalar","Almejar/desejar","Limpar com aspirador","Respirar"],g:1,exp:"'Aspirar a' (com preposição) = almejar, desejar. 'Aspirar' (sem preposição) = inalar. A regência com 'a' distingue os dois sentidos."},
+      ]},
+      {nome:'Informática (Q5–Q7)',qs:[
+        {n:5,q:"No MS-Excel, qual operador é utilizado para concatenar (unir) textos em fórmulas?",ops:["+ (mais)","& (e comercial)","* (asterisco)","/ (barra)"],g:1,exp:"O operador & concatena textos no Excel. Exemplo: =A1&\" \"&B1 une o conteúdo de A1, um espaço e B1 em uma única célula."},
+        {n:6,q:"Uma URL (Uniform Resource Locator) é:",ops:["Um tipo de vírus","O endereço de um recurso na internet","Um protocolo de e-mail","Um formato de arquivo de imagem"],g:1,exp:"A URL identifica e localiza um recurso na internet (página, arquivo, imagem), especificando o protocolo, domínio e caminho do recurso."},
+        {n:7,q:"No MS-Word, 'controle de alterações' serve para:",ops:["Desfazer todas as alterações","Rastrear e revisar modificações feitas no documento por diferentes autores","Bloquear a edição do arquivo","Salvar automaticamente"],g:1,exp:"Controle de Alterações (Revisão > Controlar Alterações) registra cada modificação com autor, data e tipo de mudança, essencial para revisão colaborativa."},
+      ]},
+      {nome:'Conhecimentos Específicos (Q8–Q10)',qs:[
+        {n:8,q:"A Sala de Aula Invertida (Flipped Classroom), modelo de ensino híbrido, caracteriza-se por:",ops:["O professor transmitir conteúdo em sala e os alunos fazerem exercícios em casa","Os alunos estudarem o conteúdo antes da aula (vídeos, textos) e o tempo em sala ser usado para discussão e aplicação","Aulas exclusivamente online sem encontros presenciais","Ausência de avaliações formais"],g:1,exp:"Na sala de aula invertida, a transmissão do conteúdo ocorre fora da sala (via vídeos, podcasts), e o tempo presencial é dedicado a aprofundamento, discussões e resolução de problemas."},
+        {n:9,q:"A cartografia temática difere da cartografia geral porque:",ops:["Representa apenas a localização de cidades","Representa fenômenos específicos (clima, população, economia) sobrepostos à base geográfica","Não utiliza escalas","É usada exclusivamente em navegação"],g:1,exp:"A cartografia temática representa distribuições e fenômenos específicos (densidade demográfica, biomas, rotas comerciais) sobre uma base cartográfica, sendo essencial no ensino de Geografia."},
+        {n:10,q:"Segundo a LDB (Lei 9.394/1996), a educação básica compreende:",ops:["Apenas o ensino fundamental","Educação infantil, ensino fundamental e ensino médio","Ensino fundamental e ensino médio","Apenas ensino médio e superior"],g:1,exp:"A LDB define a educação básica como o conjunto formado pela educação infantil, ensino fundamental (9 anos) e ensino médio, garantindo formação comum indispensável ao exercício da cidadania."},
+      ]},
+    ]
+  },
+  {
+    id:'sim5',titulo:'Simulado 5 – Completo (LP + Informática + Geografia)',banca:'Ação Bahia',ano:2025,
+    edital:'Professor I de Geografia',cargo:'Nível Superior',
+    secoes:[
+      {nome:'Língua Portuguesa (Q1–Q4)',qs:[
+        {n:1,q:"Assinale a alternativa em que a vírgula está empregada CORRETAMENTE:",ops:["Comprei atlas, globo e, régua.","Os alunos, que estudaram, foram aprovados.","João, meu melhor aluno, passou no concurso.","Ela chegou, e saiu rapidamente."],g:2,exp:"Vírgula de aposto: 'meu melhor aluno' é um aposto explicativo de 'João' e deve ser isolado por vírgulas. Nas outras alternativas o uso da vírgula é incorreto."},
+        {n:2,q:"Identifique o par de PARÔNIMOS:",ops:["Escola / escolar","Descrição / discrição","Amor / desamor","Casa / casinha"],g:1,exp:"Parônimos são palavras de grafia e pronúncia semelhantes mas significados diferentes: 'descrição' (ato de descrever) e 'discrição' (qualidade de discreto)."},
+        {n:3,q:"Na frase 'Vende-se imóvel', a voz verbal é:",ops:["Ativa","Passiva analítica","Passiva sintética","Reflexiva"],g:2,exp:"Passiva sintética (ou pronominal): formada com verbo na 3ª pessoa + pronome apassivador 'se'. Equivale a 'Um imóvel é vendido'."},
+        {n:4,q:"'Embora estivesse cansado, o professor preparou a aula de campo.' A oração 'embora estivesse cansado' é:",ops:["Coordenada sindética adversativa","Subordinada adverbial concessiva","Subordinada adverbial causal","Coordenada assindética"],g:1,exp:"A conjunção 'embora' + subjuntivo introduz oração subordinada adverbial concessiva: indica concessão, contraste com a ideia principal."},
+      ]},
+      {nome:'Informática (Q5–Q7)',qs:[
+        {n:5,q:"No MS-Excel, qual função calcula a média aritmética de um intervalo?",ops:["=SOMA()","=MÉDIA()","=MED()","=MODO()"],g:1,exp:"=MÉDIA(intervalo) calcula a média aritmética. =MED() retorna a mediana (valor central) e =MODO() retorna o valor mais frequente."},
+        {n:6,q:"No MS-Word, o recurso 'Localizar e Substituir' (Ctrl+H) serve para:",ops:["Salvar o documento em outro formato","Encontrar e trocar palavras ou trechos no documento","Verificar a ortografia","Inserir comentários"],g:1,exp:"Ctrl+H abre 'Localizar e Substituir', permitindo encontrar uma palavra/frase e substituí-la por outra em todo o documento de forma automática."},
+        {n:7,q:"No MS-PowerPoint, 'animação' difere de 'transição' porque:",ops:["Animação muda o design do slide","Animação aplica efeitos a objetos dentro do slide; transição aplica efeito entre slides","Transição é mais rápida","São a mesma coisa"],g:1,exp:"Animação: efeitos aplicados a elementos (texto, imagem) dentro de um slide. Transição: efeito visual ao passar de um slide para o próximo."},
+      ]},
+      {nome:'Conhecimentos Específicos (Q8–Q10)',qs:[
+        {n:8,q:"O processo de desertificação no Brasil ocorre principalmente na região:",ops:["Amazônica","Centro-Oeste","Semiárida do Nordeste","Sul"],g:2,exp:"A desertificação afeta principalmente o semiárido nordestino, onde o clima, o solo frágil e o uso inadequado da terra (desmatamento, queimadas, irrigação inadequada) aceleram a degradação."},
+        {n:9,q:"A divisão do território brasileiro em mesorregiões e microrregiões foi estabelecida pelo:",ops:["Ministério da Educação","IBGE","Governo estadual do RJ","Banco Central"],g:1,exp:"O IBGE (Instituto Brasileiro de Geografia e Estatística) é o órgão responsável pela divisão do território em regiões, estados, mesorregiões, microrregiões e municípios para fins estatísticos."},
+        {n:10,q:"O ECA (Lei 8.069/1990) estabelece que é dever da escola:",ops:["Apenas transmitir conteúdo curricular","Comunicar ao Conselho Tutelar casos de suspeita de maus-tratos ou violência contra crianças","Punir alunos com suspensão","Substituir o papel da família na educação"],g:1,exp:"O art. 56 do ECA obriga os dirigentes de estabelecimentos de ensino fundamental a comunicar ao Conselho Tutelar os casos de maus-tratos, faltas injustificadas e evasão escolar."},
+      ]},
+    ]
+  },
+  {
+    id:'sim6',titulo:'Simulado 6 – Completo (LP + Informática + Geografia)',banca:'Ação Bahia',ano:2025,
+    edital:'Professor I de Geografia',cargo:'Nível Superior',
+    secoes:[
+      {nome:'Língua Portuguesa (Q1–Q4)',qs:[
+        {n:1,q:"Assinale a alternativa em que a concordância nominal está CORRETA:",ops:["As professoras ficaram satisfeito com o resultado.","Os professores estavam cansadas após a reunião.","As professoras ficaram satisfeitas com o mapa.","O grupo de alunos saíram cedo."],g:2,exp:"O adjetivo 'satisfeitas' concorda em gênero (feminino) e número (plural) com 'professoras'. Nas demais, há discordância entre substantivo e adjetivo."},
+        {n:2,q:"'Ele assistiu o documentário sobre a Amazônia.' Esta frase apresenta erro de:",ops:["Concordância verbal","Regência verbal","Ortografia","Colocação pronominal"],g:1,exp:"'Assistir' no sentido de ver/presenciar é verbo transitivo indireto: exige preposição 'a'. O correto é 'assistiu ao documentário'."},
+        {n:3,q:"Assinale a alternativa em que há METÁFORA:",ops:["Ela corre como o vento.","O Cerrado é o berço das águas do Brasil.","Mil pessoas assistiram à aula.","O estudante leu o texto rapidamente."],g:1,exp:"'O Cerrado é o berço das águas' é metáfora: identifica implicitamente dois elementos diferentes sem usar 'como'. 'Corre como o vento' é comparação."},
+        {n:4,q:"Na oração 'Os professores que se dedicam obtêm bons resultados', a oração 'que se dedicam' é:",ops:["Subordinada substantiva subjetiva","Subordinada adjetiva restritiva","Subordinada adverbial causal","Coordenada sindética aditiva"],g:1,exp:"'Que se dedicam' é oração subordinada adjetiva restritiva: introduzida pelo pronome relativo 'que', restringe o sentido do antecedente 'professores' (sem vírgula)."},
+      ]},
+      {nome:'Informática (Q5–Q7)',qs:[
+        {n:5,q:"No MS-Word, 'recuo de parágrafo' serve para:",ops:["Alterar a fonte do texto","Definir o afastamento do texto em relação às margens da página","Inserir uma tabela","Numerar as páginas"],g:1,exp:"O recuo controla o afastamento horizontal do parágrafo em relação às margens. Pode ser recuo à esquerda, à direita, de primeira linha ou deslocado."},
+        {n:6,q:"No MS-Windows, o Gerenciador de Tarefas (Ctrl+Alt+Del) permite:",ops:["Instalar novos programas","Monitorar e encerrar processos e programas em execução","Formatar o disco rígido","Configurar a impressora"],g:1,exp:"O Gerenciador de Tarefas monitora o uso de CPU, memória e rede, além de permitir encerrar processos travados ou que consomem muitos recursos."},
+        {n:7,q:"Ao anexar um arquivo em um e-mail, o usuário está:",ops:["Copiando o e-mail para outra pasta","Incluindo um arquivo para ser enviado junto com a mensagem","Encaminhando o e-mail para outro destinatário","Salvando o e-mail como rascunho"],g:1,exp:"Anexar (attach) significa incluir um arquivo (documento, imagem, planilha) junto à mensagem de e-mail para que o destinatário possa baixá-lo."},
+      ]},
+      {nome:'Conhecimentos Específicos (Q8–Q10)',qs:[
+        {n:8,q:"O Pantanal, bioma localizado principalmente no Centro-Oeste brasileiro, é classificado como:",ops:["Floresta tropical","Maior planície inundável do mundo e área úmida de importância global","Deserto de altitude","Savana de clima seco"],g:1,exp:"O Pantanal é a maior planície inundável do mundo (~150.000 km²), com rica biodiversidade. É reconhecido como Patrimônio Natural da Humanidade pela UNESCO e Reserva da Biosfera."},
+        {n:9,q:"Os organismos internacionais como FMI e Banco Mundial foram criados principalmente após:",ops:["A Primeira Guerra Mundial","A Segunda Guerra Mundial (Conferência de Bretton Woods, 1944)","A Guerra Fria","A Revolução Industrial"],g:1,exp:"O FMI e o Banco Mundial foram criados na Conferência de Bretton Woods (1944) para reconstruir a economia mundial após a Segunda Guerra e estabilizar o sistema financeiro internacional."},
+        {n:10,q:"O conceito de 'região' na geografia pode ser compreendido como:",ops:["Apenas a divisão político-administrativa do território","Uma porção do espaço com características homogêneas que a distinguem de outras áreas","Sinônimo de país ou estado","Apenas o espaço físico sem considerar aspectos humanos"],g:1,exp:"Região é uma construção teórica que delimita áreas do espaço com características comuns (físicas, econômicas, culturais ou políticas), distinguindo-as de outras. É um conceito relativo e historicamente construído."},
+      ]},
+    ]
+  },
+];
+
+const STORAGE_KEY = 'geografiaRespostas';
+let flashDados=[], flashDeck=[], flashIdx=0;
+let quizPerguntas=[], quizIdx=0, quizCertas=0, quizErradas=0, respondeu=false;
+let exAtual=null, exSecAtual=0, exQAtual=0, exRespostas={}, exStarted=false;
+let _speechRate=1;
+
+window.addEventListener('DOMContentLoaded',()=>{
+  buildFlashDados();
+  renderResumo();
+  renderFlashFiltro();
+  renderFlash();
+  renderMapa();
+  renderExamesList();
+  mostrarRelatorio();
+  const dark = localStorage.getItem('geografiaDark');
+  if(dark==='1') document.body.setAttribute('data-dark','');
+});
+
+function renderResumo(){
+  const el = document.getElementById('sec-resumo');
+  el.innerHTML = disciplinas.map((d,i)=>`
+    <div class="disc-bloco">
+      <div class="disc-header" onclick="toggleDisc(${i},this)" style="background:${d.cor}">
+        ${d.nome} <span class="arrow">▼</span>
+      </div>
+      <div class="disc-topicos" id="disc-${i}">
+        ${d.topicos.map(t=>`
+          <div class="topico-item">
+            <div style="flex:1">
+              <div class="topico-nome">${t.t}</div>
+              <div class="topico-desc">${t.d}</div>
+            </div>
+            <span class="freq-badge freq-${t.freq}">${t.freq.toUpperCase()}</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleDisc(i,hdr){
+  const el = document.getElementById('disc-'+i);
+  const open = el.classList.toggle('open');
+  hdr.classList.toggle('open',open);
+}
+
+function buildFlashDados(){
+  flashDados=[];
+  disciplinas.forEach(d=>{
+    d.topicos.forEach(t=>{
+      flashDados.push({disc:d.nome, termo:t.t, def:t.d, freq:t.freq});
+    });
+  });
+  flashDeck=[...flashDados];
+}
+
+function renderFlashFiltro(){
+  const sel = document.getElementById('flash-filtro');
+  disciplinas.forEach(d=>{
+    const op = document.createElement('option');
+    op.value = d.nome;
+    op.textContent = d.nome.replace(/^.{2}/,'');
+    sel.appendChild(op);
+  });
+}
+
+function filtrarFlash(){
+  const v = document.getElementById('flash-filtro').value;
+  flashDeck = v==='todos' ? [...flashDados] : flashDados.filter(f=>f.disc===v);
+  flashIdx=0;
+  renderFlash();
+}
+
+function shuffleFlash(){
+  for(let i=flashDeck.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [flashDeck[i],flashDeck[j]]=[flashDeck[j],flashDeck[i]];
+  }
+  flashIdx=0;
+  document.getElementById('flash-inner').classList.remove('virado');
+  renderFlash();
+  toast('Embaralhado!');
+}
+
+function renderFlash(){
+  if(!flashDeck.length) return;
+  const c = flashDeck[flashIdx];
+  document.getElementById('flash-termo').textContent = c.termo;
+  document.getElementById('flash-def').textContent = c.def;
+  document.getElementById('flash-prog').textContent = `${flashIdx+1} / ${flashDeck.length}`;
+  document.getElementById('flash-inner').classList.remove('virado');
+}
+
+function virarCard(){
+  document.getElementById('flash-inner').classList.toggle('virado');
+}
+
+function navFlash(d){
+  flashIdx = (flashIdx+d+flashDeck.length)%flashDeck.length;
+  renderFlash();
+}
+
+function falarCard(){
+  const virado = document.getElementById('flash-inner').classList.contains('virado');
+  const txt = virado ? document.getElementById('flash-def').textContent : document.getElementById('flash-termo').textContent;
+  falar(txt);
+}
+
+function falar(txt){
+  if(!window.speechSynthesis) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(txt);
+  u.lang='pt-BR'; u.rate=_speechRate;
+  speechSynthesis.speak(u);
+}
+
+function renderMapa(){
+  const filtros = document.getElementById('mapa-filtros');
+  const nomes = ['Todos',...disciplinas.map(d=>d.nome)];
+  filtros.innerHTML = nomes.map((n,i)=>`<button class="${i===0?'ativo':''}" onclick="filtrarMapa(this,'${n}')">${n}</button>`).join('');
+  _renderMapaGrid('Todos');
+}
+
+function filtrarMapa(btn,disc){
+  document.querySelectorAll('.mapa-filtros button').forEach(b=>b.classList.remove('ativo'));
+  btn.classList.add('ativo');
+  _renderMapaGrid(disc);
+}
+
+function _renderMapaGrid(disc){
+  const grid = document.getElementById('mapa-grid');
+  let items=[];
+  disciplinas.forEach(d=>{
+    if(disc==='Todos'||d.nome===disc){
+      d.topicos.forEach(t=>items.push({disc:d.nome,t}));
+    }
+  });
+  grid.innerHTML = items.map(({disc,t})=>`
+    <div class="mapa-card" onclick="toast('${t.t}')">
+      <div class="mc-disc">${disc.replace(/^.{2}/,'')}</div>
+      <div class="mc-nome">${t.t}</div>
+      <span class="freq-badge freq-${t.freq} mc-freq">${t.freq.toUpperCase()}</span>
+    </div>
+  `).join('');
+}
+
+function iniciarQuiz(){
+  const filtro = document.getElementById('quiz-filtro').value;
+  let banco = filtro==='todos' ? [...questoes] : questoes.filter(q=>q.disc===filtro);
+  for(let i=banco.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[banco[i],banco[j]]=[banco[j],banco[i]];}
+  quizPerguntas = banco.slice(0,Math.min(10,banco.length));
+  quizIdx=0; quizCertas=0; quizErradas=0; respondeu=false;
+  document.getElementById('quiz-placar').classList.remove('show');
+  document.getElementById('quiz-box').style.display='block';
+  renderQuestao();
+}
+
+function renderQuestao(){
+  if(quizIdx>=quizPerguntas.length){encerrarQuiz();return;}
+  respondeu=false;
+  const q = quizPerguntas[quizIdx];
+  document.getElementById('q-disc').textContent = q.disc;
+  document.getElementById('q-num').textContent = `${quizIdx+1}/${quizPerguntas.length}`;
+  document.getElementById('q-pergunta').textContent = q.p;
+  document.getElementById('q-exp').classList.remove('show');
+  document.getElementById('btn-prox-q').style.display='none';
+  const ops = document.getElementById('q-ops');
+  ops.innerHTML = q.ops.map((o,i)=>`
+    <button class="quiz-op" onclick="verificarResposta(${i})">
+      <span style="font-weight:700;min-width:18px">${String.fromCharCode(65+i)})</span> ${o}
+    </button>
+  `).join('');
+}
+
+function verificarResposta(idx){
+  if(respondeu) return;
+  respondeu=true;
+  const q = quizPerguntas[quizIdx];
+  const btns = document.querySelectorAll('.quiz-op');
+  btns.forEach((b,i)=>{
+    b.disabled=true;
+    if(i===q.c) b.classList.add('correta');
+    else if(i===idx) b.classList.add('errada');
+  });
+  if(idx===q.c) quizCertas++; else quizErradas++;
+  salvarRespostaQuiz(idx===q.c);
+  document.getElementById('q-exp').textContent = q.exp;
+  document.getElementById('q-exp').classList.add('show');
+  document.getElementById('btn-prox-q').style.display='inline-block';
+}
+
+function proximaQuestao(){
+  quizIdx++;
+  renderQuestao();
+}
+
+function encerrarQuiz(){
+  document.getElementById('quiz-box').style.display='none';
+  const placar = document.getElementById('quiz-placar');
+  placar.classList.add('show');
+  const total = quizCertas+quizErradas;
+  document.getElementById('placar-num').textContent = `${quizCertas}/${total}`;
+  const pct = total?Math.round(quizCertas/total*100):0;
+  document.getElementById('placar-label').textContent = `${pct}% de aproveitamento – ${quizCertas} certa(s), ${quizErradas} errada(s)`;
+}
+
+function salvarRespostaQuiz(acertou){
+  const dados = JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}');
+  dados.quizTotal = (dados.quizTotal||0)+1;
+  dados.quizCertas = (dados.quizCertas||0)+(acertou?1:0);
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(dados));
+}
+
+function renderExamesList(){
+  const el = document.getElementById('exames-lista');
+  el.innerHTML = EXAMES_DATA.map(e=>`
+    <div class="exame-card">
+      <div class="exame-info">
+        <h3>${e.titulo}</h3>
+        <p>${e.banca} · ${e.ano} · ${e.cargo}</p>
+      </div>
+      <button class="btn-iniciar" onclick="iniciarExame('${e.id}')">▶ Iniciar</button>
+    </div>
+  `).join('');
+}
+
+function iniciarExame(id){
+  exAtual = EXAMES_DATA.find(e=>e.id===id);
+  exSecAtual=0; exQAtual=0; exRespostas={}; exStarted=true;
+  document.getElementById('exames-lista').style.display='none';
+  const ativo = document.getElementById('exame-ativo');
+  ativo.classList.add('show');
+  document.getElementById('ex-titulo').textContent = exAtual.titulo;
+  document.getElementById('ex-info').textContent = `${exAtual.banca} · ${exAtual.ano}`;
+  document.getElementById('ex-resultado').classList.remove('show');
+  document.getElementById('ex-corpo').style.display='block';
+  renderQuestaoExame();
+}
+
+function renderQuestaoExame(){
+  const sec = exAtual.secoes[exSecAtual];
+  const q = sec.qs[exQAtual];
+  document.getElementById('ex-sec-label').textContent = sec.nome;
+
+  const pergEl = document.getElementById('ex-pergunta');
+  pergEl.innerHTML = `<div style="display:flex;align-items:flex-start;gap:8px"><span style="flex:1"></span><button class="audio-btn" title="Ouvir pergunta">🔊</button></div>`;
+  pergEl.querySelector('span').textContent = `Q${q.n}. ${q.q}`;
+  pergEl.querySelector('.audio-btn').addEventListener('click', ()=>falar(`Q${q.n}. ${q.q}`));
+
+  document.getElementById('ex-exp').classList.remove('show');
+  document.getElementById('btn-ex-prox').style.display='none';
+
+  const ops = document.getElementById('ex-ops');
+  ops.innerHTML = q.ops.map((o,i)=>`
+    <button class="ex-op" data-idx="${i}">
+      <span style="font-weight:700;min-width:18px">${String.fromCharCode(65+i)})</span>
+      <span style="flex:1"></span>
+      <span class="audio-btn-op" data-audio="${i}" title="Ouvir alternativa">🔊</span>
+    </button>
+  `).join('');
+
+  ops.querySelectorAll('.ex-op').forEach((btn, i)=>{
+    btn.querySelector('span:nth-child(2)').textContent = q.ops[i];
+    btn.addEventListener('click', (e)=>{
+      if(e.target.classList.contains('audio-btn-op')) return;
+      responderExame(i);
+    });
+    btn.querySelector('.audio-btn-op').addEventListener('click', (e)=>{
+      e.stopPropagation();
+      falar(q.ops[i]);
+    });
+  });
+}
+
+function responderExame(idx){
+  const sec = exAtual.secoes[exSecAtual];
+  const q = sec.qs[exQAtual];
+  const key = `${exSecAtual}_${exQAtual}`;
+  if(exRespostas[key]!==undefined) return;
+  exRespostas[key]=idx;
+  const btns = document.querySelectorAll('.ex-op');
+  btns.forEach((b,i)=>{
+    b.disabled=true;
+    if(i===q.g) b.classList.add('correta');
+    else if(i===idx) b.classList.add('errada');
+  });
+  document.getElementById('ex-exp').textContent = q.exp;
+  document.getElementById('ex-exp').classList.add('show');
+  document.getElementById('btn-ex-prox').style.display='inline-block';
+}
+
+function avancarExame(){
+  const sec = exAtual.secoes[exSecAtual];
+  exQAtual++;
+  if(exQAtual>=sec.qs.length){
+    exSecAtual++;
+    exQAtual=0;
+    if(exSecAtual>=exAtual.secoes.length){finalizarExame();return;}
+  }
+  renderQuestaoExame();
+}
+
+function finalizarExame(){
+  document.getElementById('ex-corpo').style.display='none';
+  let total=0,certas=0;
+  exAtual.secoes.forEach((s,si)=>{
+    s.qs.forEach((q,qi)=>{
+      total++;
+      if(exRespostas[`${si}_${qi}`]===q.g) certas++;
+    });
+  });
+  document.getElementById('ex-res-num').textContent = `${certas}/${total}`;
+  const pct=Math.round(certas/total*100);
+  document.getElementById('ex-res-label').textContent = `${pct}% de aproveitamento`;
+  document.getElementById('ex-resultado').classList.add('show');
+  salvarResultadoSimulado(certas,total);
+}
+
+function salvarResultadoSimulado(certas,total){
+  const dados = JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}');
+  dados.simTotal = (dados.simTotal||0)+1;
+  dados.simCertas = (dados.simCertas||0)+certas;
+  dados.simQuestoes = (dados.simQuestoes||0)+total;
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(dados));
+}
+
+function voltarExames(){
+  document.getElementById('exame-ativo').classList.remove('show');
+  document.getElementById('exames-lista').style.display='grid';
+  exAtual=null; exStarted=false;
+}
+
+function mostrarRelatorio(){
+  const dados = JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}');
+  const qT=dados.quizTotal||0, qC=dados.quizCertas||0;
+  const sT=dados.simTotal||0, sC=dados.simCertas||0, sQ=dados.simQuestoes||0;
+  const grid = document.getElementById('stats-grid');
+  grid.innerHTML = `
+    <div class="stat-card"><div class="stat-num">${qT}</div><div class="stat-label">Quiz respondidas</div></div>
+    <div class="stat-card"><div class="stat-num">${qT?Math.round(qC/qT*100):0}%</div><div class="stat-label">Acerto no Quiz</div></div>
+    <div class="stat-card"><div class="stat-num">${sT}</div><div class="stat-label">Simulados feitos</div></div>
+    <div class="stat-card"><div class="stat-num">${sQ?Math.round(sC/sQ*100):0}%</div><div class="stat-label">Acerto Simulados</div></div>
+  `;
+}
+
+function exportarTXT(){
+  const dados = JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}');
+  const qT=dados.quizTotal||0,qC=dados.quizCertas||0;
+  const sT=dados.simTotal||0,sC=dados.simCertas||0,sQ=dados.simQuestoes||0;
+  const txt=`RELATÓRIO – Professor de Geografia
+Gerado em: ${new Date().toLocaleString('pt-BR')}
+
+QUIZ
+  Questões respondidas: ${qT}
+  Acertos: ${qC} (${qT?Math.round(qC/qT*100):0}%)
+  Erros: ${qT-qC}
+
+SIMULADOS
+  Simulados realizados: ${sT}
+  Questões respondidas: ${sQ}
+  Acertos: ${sC} (${sQ?Math.round(sC/sQ*100):0}%)
+
+---
+Bons estudos! 🌍
+`;
+  const a=document.createElement('a');
+  a.href='data:text/plain;charset=utf-8,'+encodeURIComponent(txt);
+  a.download='relatorio-geografia.txt';
+  a.click();
+  toast('Exportado com sucesso!');
+}
+
+function limparDados(){
+  if(!confirm('Limpar todo o histórico de respostas?')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  mostrarRelatorio();
+  toast('Dados apagados!');
+}
+
+function mudarTab(id,el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('ativo'));
+  el.classList.add('ativo');
+  document.querySelectorAll('.secao').forEach(s=>s.classList.remove('ativa'));
+  document.getElementById('sec-'+id).classList.add('ativa');
+  if(id==='relatorio') mostrarRelatorio();
+}
+
+function setSpeed(v, btn){
+  _speechRate = v;
+  document.querySelectorAll('.speed-btn').forEach(b=>b.classList.remove('ativo'));
+  btn.classList.add('ativo');
+}
+
+function toggleDark(){
+  const dark = document.body.hasAttribute('data-dark');
+  dark ? document.body.removeAttribute('data-dark') : document.body.setAttribute('data-dark','');
+  localStorage.setItem('geografiaDark', dark?'0':'1');
+}
+
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+</script>
+</body>
+</html>
